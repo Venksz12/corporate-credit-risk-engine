@@ -1,73 +1,287 @@
 # Corporate Credit Early-Warning & Expected-Loss Analytics System
 
-An academic end-to-end prototype for analysing corporate credit risk at borrower and
-facility level. It combines synthetic financial statements, facility characteristics,
-repayment behaviour and macroeconomic variables to produce early-warning indicators,
-one-year PD, illustrative LGD/EAD, expected loss, rating migration and macro stress tests.
+## About the Project
 
-> **Academic scope:** this is an educational prototype inspired by wholesale credit-risk
-> concepts. It is not a regulatory-certified Basel model and is not a complete IFRS 9
-> implementation.
+This project is a corporate credit risk analytics system developed as a final-year academic project. It helps identify borrowers who may be facing financial difficulties and estimates their potential credit risk.
 
-## Quick start
+The system combines financial statements, loan details, repayment behaviour and economic data to analyse borrower health and calculate:
+
+* Early-warning risk scores
+* Probability of Default (PD)
+* Risk grades
+* Rating migration
+* Loss Given Default (LGD)
+* Exposure at Default (EAD)
+* Expected Loss (EL)
+* Macro stress-test results
+
+The project uses synthetic data and is designed for academic and demonstration purposes.
+
+---
+
+## Main Workflow
+
+```text
+Financial Data
+      ↓
+Financial Ratios
+      ↓
+Early-Warning Score
+      ↓
+PD Model
+      ↓
+Risk Grade
+      ↓
+LGD + EAD
+      ↓
+Expected Loss
+      ↓
+Stress Testing
+      ↓
+Dashboard
+```
+
+---
+
+## System Architecture
+
+```text
+┌──────────────────────┐
+│   Synthetic Data     │
+│  Borrowers / Loans   │
+│ Behaviour / Economy  │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│     SQLite DB        │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│ Financial Ratios     │
+│ & Trends             │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│ Early Warning System │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│     PD Models        │
+│ Logistic Regression  │
+│ Gradient Boosting    │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│ Risk Grade &          │
+│ Rating Migration      │
+└──────────┬───────────┘
+           ↓
+      ┌────┴────┐
+      ↓         ↓
+    LGD         EAD
+      └────┬────┘
+           ↓
+┌──────────────────────┐
+│    Expected Loss     │
+│     PD × LGD × EAD   │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│   Stress Testing     │
+│ Baseline / Moderate  │
+│       / Severe       │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│ Streamlit Dashboard  │
+└──────────────────────┘
+```
+
+---
+
+## Activity Diagram
+
+```mermaid
+flowchart TD
+    A([Start]) --> B[Generate Synthetic Data]
+    B --> C[Store Data in SQLite]
+    C --> D[Calculate Financial Ratios]
+    D --> E[Calculate Early-Warning Score]
+    E --> F[Check Covenant Breaches]
+    F --> G[Prepare PD Dataset]
+    G --> H[Train PD Models]
+    H --> I[Evaluate Models]
+    I --> J[Generate PD]
+    J --> K[Assign Risk Grades]
+    K --> L[Analyse Rating Migration]
+    L --> M[Calculate LGD]
+    M --> N[Calculate EAD]
+    N --> O[Calculate Expected Loss]
+    O --> P[Run Stress Tests]
+    P --> Q[Generate Portfolio Analytics]
+    Q --> R[Display Streamlit Dashboard]
+    R --> S([End])
+```
+
+---
+
+## Key Features
+
+### Early Warning
+
+The system calculates a 0–100 deterioration score using:
+
+* Leverage
+* Liquidity
+* Interest coverage
+* Revenue growth
+* Cash flow
+* Repayment behaviour
+
+Risk is grouped into:
+
+| Score  | Status   |
+| ------ | -------- |
+| 0–24   | Stable   |
+| 25–49  | Watch    |
+| 50–74  | Elevated |
+| 75–100 | Critical |
+
+### PD Modelling
+
+Two models are used:
+
+* Logistic Regression
+* Gradient Boosting
+
+Models are evaluated using:
+
+* ROC-AUC
+* Gini
+* KS
+* Brier Score
+
+### Expected Loss
+
+The project uses:
+
+```text
+Expected Loss = PD × LGD × EAD
+```
+
+EAD is calculated using:
+
+```text
+EAD = Drawn Exposure + CCF × Undrawn Exposure
+```
+
+---
+
+## Stress Testing
+
+The system includes three scenarios:
+
+```text
+Baseline
+   ↓
+Moderate
+   ↓
+Severe
+```
+
+Economic changes are passed through financial ratios, early-warning indicators and the PD model before calculating the stressed Expected Loss.
+
+---
+
+## Dashboard
+
+The Streamlit dashboard contains five sections:
+
+1. Portfolio Overview
+2. Borrower Early Warning
+3. Facility Risk Analytics
+4. Rating Migration
+5. Macro Stress Testing
+
+---
+
+## Project Structure
+
+```text
+corporate-credit-risk/
+│
+├── README.md
+├── requirements.txt
+├── run.py
+├── create_zip.py
+│
+├── database/
+│   └── schema.sql
+│
+├── src/
+│   ├── data/
+│   │   └── generator.py
+│   │
+│   ├── features/
+│   │   └── financial_ratios.py
+│   │
+│   └── risk/
+│       ├── early_warning.py
+│       ├── pd_model.py
+│       ├── lgd_ead_el.py
+│       └── stress_testing.py
+│
+└── dashboard/
+    └── app.py
+```
+
+---
+
+## Technologies Used
+
+* Python 3.10+
+* SQLite
+* Pandas
+* NumPy
+* Scikit-learn
+* Statsmodels
+* Plotly
+* Streamlit
+
+---
+
+## How to Run
+
+Install the required packages:
 
 ```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+Run the project:
+
+```bash
 python run.py
 ```
 
-`run.py` initializes `data/credit_risk.db`, generates 1,000 borrowers, 3,500 facilities,
-36 months of behaviour and macro data, trains the PD models, writes analytical tables,
-and launches Streamlit.
+The system will generate the data, build the risk models, calculate the risk measures and launch the Streamlit dashboard.
 
-To rebuild without launching the dashboard:
+To build the system without opening the dashboard:
 
 ```bash
 python run.py --no-dashboard
 ```
 
-To package the repository:
+---
 
-```bash
-python create_zip.py
-```
+## Academic Scope
 
-## Architecture
+This project uses synthetic data and simplified assumptions for academic purposes. The risk scores, model outputs, collateral assumptions, CCFs and stress scenarios are project-defined.
 
-Business problem → data model → financial ratios → trajectory → early warning →
-covenants → PD → risk grade → migration → LGD/EAD → expected loss → stress testing →
-portfolio analytics → dashboard.
+It is intended for **learning, demonstration and final-year project evaluation**, not for real-world lending or regulatory decision-making.
 
-## Main analytical methodology
+---
 
-- Deterioration score: illustrative weighted score using leverage, liquidity, coverage,
-  revenue, cash flow and behaviour.
-- PD: interpretable Logistic Regression plus Gradient Boosting baseline comparison.
-- Validation: time-based split, ROC-AUC, Gini, KS and Brier score.
-- Risk grades: seven project-defined PD bands.
-- EAD: drawn exposure plus CCF × undrawn exposure.
-- LGD: discounted net recoveries relative to EAD.
-- Expected loss: PD × LGD × EAD.
-- Stress testing: macro shocks propagate through revenue, EBITDA, interest expense,
-  ratios, early warning and the trained PD model.
+## Conclusion
 
-The synthetic data generator deliberately creates relationships such as higher leverage
-→ weaker interest coverage → greater deterioration → higher default propensity, rather
-than drawing every variable independently.
-
-## Dashboard pages
-
-1. Portfolio Overview
-2. Borrower Early Warning
-3. Facility Risk Analytics
-4. Rating Migration Analysis
-5. Macro Stress Testing
-
-## Important limitations
-
-The data are synthetic. Risk-grade thresholds, deterioration weights, CCFs, collateral
-haircuts, recovery assumptions and stress transmission coefficients are project-defined
-illustrative assumptions. Results should not be interpreted as actual bank risk estimates.
+This project demonstrates how financial data, borrower behaviour and economic conditions can be combined to understand corporate credit risk. It brings together early-warning analysis, PD modelling, LGD, EAD, Expected Loss, rating migration and stress testing in one simple analytical system.
