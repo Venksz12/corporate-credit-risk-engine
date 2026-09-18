@@ -1,19 +1,19 @@
-# Corporate Credit Early-Warning & Expected-Loss Analytics System
+# Corporate Credit Early Warning & Expected Loss Analytics System
 
 ## About the Project
 
-This project is a corporate credit risk analytics system developed as a final-year academic project. It helps identify borrowers who may be facing financial difficulties and estimates their potential credit risk.
+This project is a corporate credit risk analytics system developed as a final year academic project. It helps identify borrowers who may be facing financial difficulties and estimates their potential credit risk.
 
 The system combines financial statements, loan details, repayment behaviour and economic data to analyse borrower health and calculate:
 
-* Early-warning risk scores
+* Early warning risk scores
 * Probability of Default (PD)
 * Risk grades
 * Rating migration
 * Loss Given Default (LGD)
 * Exposure at Default (EAD)
 * Expected Loss (EL)
-* Macro stress-test results
+* Macro stress test results
 
 The project uses synthetic data and is designed for academic and demonstration purposes.
 
@@ -72,8 +72,8 @@ Dashboard
 └──────────┬───────────┘
            ↓
 ┌──────────────────────┐
-│ Risk Grade &          │
-│ Rating Migration      │
+│ Risk Grade &         │
+│ Rating Migration     │
 └──────────┬───────────┘
            ↓
       ┌────┴────┐
